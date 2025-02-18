@@ -184,7 +184,7 @@ def cross_validate_models(data, aggregation_type):
 
 
 # Streamlit UI to select a file and aggregation type
-st.title("Data Aggregation and Model Evaluation")
+st.image("images/uc3.png")
 
 # Path to the directory containing the CSV files
 file_directory = 'WFF/data/SKU2'
