@@ -72,49 +72,87 @@ A properly scaled dataset where all features are optimized for model training.
 
 ---
 
-## 👉 Step 6: Feature Engineering & Train-Test Split (Chronological Order)
+## 👉 Step 6: Feature Engineering
 ### **Objective**
-Enhance data with meaningful features and split into training and testing sets while preserving the time-based sequence to prevent data leakage.
+Enhance data with meaningful features tailored for both **traditional statistical models**, **machine learning models**, and **deep learning models** to improve forecasting accuracy.
 
-### **Feature Engineering for Different Models:**
-#### **🔢 Traditional Models (ARIMA, SARIMA, ARIMAX)**
-- **Lag Features** → Captures previous time steps as predictors.
-- **Rolling Averages** → Smooths fluctuations for trend detection.
-- **Seasonality Features** → Enhances SARIMA performance with weekly/monthly cycles.
-- **External Variables (ARIMAX Only)** → Adds promotions, holidays, or weather.
-
-#### **🌿 Machine Learning Models (XGBoost, Random Forest, etc.)**
-- **Lag Features** → Past values help models recognize patterns.
-- **Rolling Averages** → Helps smooth erratic demand.
-- **Cyclical Date Features** → Encodes day, month, and week as sine/cosine transformations.
-- **External Variables** → Promotional events, holidays, pricing changes.
-
-#### **🤖 Deep Learning Models (LSTM, Transformers, CNNs)**
-- **Lag Features** → Optional; models automatically learn sequential patterns.
-- **Cyclical Date Features** → Sine/cosine encoding improves temporal awareness.
-- **External Variables** → Strongly recommended for improving forecasting accuracy.
-
-### **Train-Test Split Steps:**
-- **Train-Test Split (80-20)** → Ensures the model is trained on past data and tested on future unseen data.
-- **No Shuffling** → Maintains time order for forecasting accuracy.
-
-### **Outcome**
-A dataset with engineered features that enhance model performance and a robust train-test split that respects the temporal structure of the data.
+### **Prepared Datasets:**
+- **`d_df_stat`** → Prepared dataset optimized for **ARIMA/SARIMA (no exogenous variables).**
+- **`d_df_ml`** → Feature-enhanced dataset for **ML models (XGBoost, Random Forest, etc.).**
+- **`d_df_nn`** → Structured dataset for **Neural Networks (LSTM, Transformers, etc.)**
 
 ---
 
-## 👉 Step 7: Baseline Forecasting Models
+## 👉 Step 7: Train-Test Split (Chronological Order)
 ### **Objective**
-Build **simple forecasting models** as an initial benchmark.
+Split the dataset into training and testing sets while preserving the time-based sequence to prevent data leakage.
+
+### **Outcome**
+A robust train-test split that respects the temporal structure of the data, preparing the dataset for model training and evaluation.
+
+---
+
+## 👉 Step 8: Traditional Statistical Models (ARIMA, SARIMA, Exponential Smoothing)
+### **Objective**
+Apply classic time-series forecasting models that rely on past demand patterns.
 
 ### **Models Included:**
-- **Moving Averages**
-- **Exponential Smoothing (Holt-Winters Method)**
-- **Simple Regression-Based Forecasting**
+- **ARIMA (Auto-Regressive Integrated Moving Average)** → Best for non-seasonal data.
+- **SARIMA (Seasonal ARIMA)** → Best for data with seasonal patterns.
+- **Exponential Smoothing Models (Simple, Holt-Winters Method)** → Best for smoothing and capturing trends & seasonality.
 
 ### **Outcome**
-A baseline set of models to compare with more advanced techniques.
+A set of statistical forecasting models that serve as a benchmark before applying machine learning techniques.
 
 ---
+
+## 👉 Step 9: Machine Learning Models
+### **Objective**
+Apply supervised machine learning models to capture complex demand patterns.
+
+### **Models Included:**
+- **Linear Regression, Ridge, Lasso, Elastic Net**
+- **Decision Trees, Random Forest, XGBoost, LightGBM, CatBoost**
+- **Support Vector Regression (SVR)**
+- **Ensemble Models (Stacking, Blending)**
+
+### **Outcome**
+More robust forecasting models leveraging ML techniques.
+
+---
+
+## 👉 Step 10: Neural Network Models
+### **Objective**
+Implement deep learning models capable of learning long-term dependencies.
+
+### **Models Included:**
+- **LSTMs (Long Short-Term Memory Networks)**
+- **Transformers (Attention-Based Models)**
+- **CNNs (Convolutional Neural Networks for Time-Series)**
+
+### **Outcome**
+Advanced AI models that dynamically learn sequential patterns.
+
+---
+
+## 👉 Step 11: Model Evaluation & Comparison
+### **Objective**
+Assess model performance across statistical, ML, and deep learning approaches.
+
+### **Baseline Models:**
+- **For Traditional Models:** ARIMA/SARIMA/Exponential Smoothing as the benchmark.
+- **For Machine Learning:** Linear Regression as the simplest baseline.
+- **For Neural Networks:** A simple LSTM model without attention mechanisms.
+
+### **Metrics Used:**
+- **MAE, RMSE, R² Score**
+- **Comparison of forecast accuracy**
+
+### **Outcome**
+A comprehensive evaluation to determine the best-performing model for demand forecasting.
+
+---
+
+
 
 
