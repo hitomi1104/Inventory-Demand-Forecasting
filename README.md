@@ -135,24 +135,31 @@ Advanced AI models that dynamically learn sequential patterns.
 
 ---
 
-## 👉 Step 11: Model Evaluation & Comparison
+## 👉 Step 11: Model Fine-Tuning
 ### **Objective**
-Assess model performance across statistical, ML, and deep learning approaches.
+Optimize hyperparameters for ARIMA, SARIMA, and machine learning models to improve forecasting accuracy.
 
-### **Baseline Models:**
-- **For Traditional Models:** ARIMA/SARIMA/Exponential Smoothing as the benchmark.
-- **For Machine Learning:** Linear Regression as the simplest baseline.
-- **For Neural Networks:** A simple LSTM model without attention mechanisms.
-
-### **Metrics Used:**
-- **MAE, RMSE, R² Score**
-- **Comparison of forecast accuracy**
+### **Methods Used:**
+- **Grid Search for ARIMA (p, d, q) and SARIMA (P, D, Q, S)**
+- **Hyperparameter tuning for ML models (Random Forest, XGBoost, etc.)**
+- **Neural Network architecture optimization (LSTMs, Transformers)**
 
 ### **Outcome**
-A comprehensive evaluation to determine the best-performing model for demand forecasting.
+A fully optimized forecasting model with improved accuracy and reduced errors.
 
 ---
 
+## 👉 Step 12: Model Evaluation and Comparison
+### **Objective**
+Assess model performance using standardized evaluation metrics.
 
+### **Metrics Used:**
+- **Mean Absolute Error (MAE)**
+- **Root Mean Squared Error (RMSE)**
+- **R² Score**
 
+### **Outcome**
+A comparative analysis of statistical, ML, and deep learning models to determine the best-performing forecasting approach.
+
+---
 
