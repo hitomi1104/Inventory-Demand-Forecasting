@@ -1,9 +1,8 @@
-# 📌 Demand Forecasting Project
+# 📈 Demand Forecasting Project
 
-## 📌 Step 1: Aggregate the Data
-
+## 👉 Step 1: Aggregate the Data
 ### **Objective**
-Convert raw transactional data into structured time-series format. This step ensures that data is prepared for forecasting models.
+Convert raw transactional data into structured time-series format to prepare for forecasting models.
 
 ### **Aggregation Levels:**
 - **Daily** → Best for short-term forecasting, inventory planning.
@@ -15,8 +14,7 @@ A structured dataset with consistent time intervals for accurate forecasting.
 
 ---
 
-## 📌 Step 2: Handle Missing Values
-
+## 👉 Step 2: Handle Missing Values
 ### **Objective**
 Identify and fill missing values in the dataset to prevent gaps from affecting model predictions.
 
@@ -31,8 +29,7 @@ A complete dataset without missing values, ensuring consistency in model inputs.
 
 ---
 
-## 📌 Step 3: Detect & Handle Outliers
-
+## 👉 Step 3: Detect & Handle Outliers
 ### **Objective**
 Identify and handle extreme values that could distort model performance.
 
@@ -46,8 +43,7 @@ A cleaned dataset where extreme values are either treated or accounted for appro
 
 ---
 
-## 📌 Step 4: Transform the Data
-
+## 👉 Step 4: Transform the Data
 ### **Objective**
 Convert non-normally distributed data into a more stable form to improve model accuracy.
 
@@ -62,8 +58,7 @@ A dataset with normalized distributions that improve forecasting performance.
 
 ---
 
-## 📌 Step 5: Scaling the Data
-
+## 👉 Step 5: Scaling the Data
 ### **Objective**
 Ensure that all features have a consistent range to improve model training stability.
 
@@ -77,22 +72,38 @@ A properly scaled dataset where all features are optimized for model training.
 
 ---
 
-## 📌 Step 6: Train-Test Split (Chronological Order)
-
+## 👉 Step 6: Feature Engineering & Train-Test Split (Chronological Order)
 ### **Objective**
-Split the dataset into training and testing sets while preserving the time-based sequence to prevent data leakage.
+Enhance data with meaningful features and split into training and testing sets while preserving the time-based sequence to prevent data leakage.
 
-### **Steps:**
+### **Feature Engineering for Different Models:**
+#### **🔢 Traditional Models (ARIMA, SARIMA, ARIMAX)**
+- **Lag Features** → Captures previous time steps as predictors.
+- **Rolling Averages** → Smooths fluctuations for trend detection.
+- **Seasonality Features** → Enhances SARIMA performance with weekly/monthly cycles.
+- **External Variables (ARIMAX Only)** → Adds promotions, holidays, or weather.
+
+#### **🌿 Machine Learning Models (XGBoost, Random Forest, etc.)**
+- **Lag Features** → Past values help models recognize patterns.
+- **Rolling Averages** → Helps smooth erratic demand.
+- **Cyclical Date Features** → Encodes day, month, and week as sine/cosine transformations.
+- **External Variables** → Promotional events, holidays, pricing changes.
+
+#### **🤖 Deep Learning Models (LSTM, Transformers, CNNs)**
+- **Lag Features** → Optional; models automatically learn sequential patterns.
+- **Cyclical Date Features** → Sine/cosine encoding improves temporal awareness.
+- **External Variables** → Strongly recommended for improving forecasting accuracy.
+
+### **Train-Test Split Steps:**
 - **Train-Test Split (80-20)** → Ensures the model is trained on past data and tested on future unseen data.
-- **Visualization** → Confirms that the split is correctly applied.
+- **No Shuffling** → Maintains time order for forecasting accuracy.
 
 ### **Outcome**
-A robust train-test split that respects the temporal structure of the data.
+A dataset with engineered features that enhance model performance and a robust train-test split that respects the temporal structure of the data.
 
 ---
 
-## 📌 Step 7: Baseline Forecasting Models
-
+## 👉 Step 7: Baseline Forecasting Models
 ### **Objective**
 Build **simple forecasting models** as an initial benchmark.
 
@@ -106,65 +117,4 @@ A baseline set of models to compare with more advanced techniques.
 
 ---
 
-## 📌 Step 8: Statistical Models & ARIMA
-
-### **Objective**
-Implement traditional statistical forecasting models for time-series data.
-
-### **Models Included:**
-- **ARIMA (AutoRegressive Integrated Moving Average)**
-- **SARIMA (Seasonal ARIMA)**
-- **Exponential Smoothing State Space Models**
-- **Prophet (Facebook's Forecasting Model)**
-
-### **Outcome**
-A comparison of statistical forecasting models to establish accuracy and performance benchmarks.
-
----
-
-## 📌 Step 9: Machine Learning Models
-
-### **Objective**
-Use supervised learning techniques to improve demand forecasting.
-
-### **Models Included:**
-- **Linear Regression**
-- **Random Forest Regressor**
-- **Gradient Boosting (XGBoost, LightGBM, CatBoost)**
-- **Support Vector Regression (SVR)**
-
-### **Outcome**
-A machine learning approach to forecasting, allowing for non-linear relationships and feature engineering.
-
----
-
-## 📌 Step 10: Neural Networks for Time-Series Forecasting
-
-### **Objective**
-Apply deep learning models to capture complex patterns in time-series data.
-
-### **Models Included:**
-- **Recurrent Neural Networks (RNN)**
-- **Long Short-Term Memory Networks (LSTM)**
-- **Convolutional Neural Networks (CNN) for Time-Series**
-- **Transformer-Based Forecasting Models**
-
-### **Outcome**
-An advanced modeling approach for capturing deep temporal dependencies in demand forecasting.
-
----
-
-## 📌 Step 11: Model Evaluation
-
-### **Objective**
-Assess model accuracy using industry-standard performance metrics.
-
-### **Evaluation Metrics:**
-- **Mean Absolute Error (MAE)**
-- **Root Mean Squared Error (RMSE)**
-- **Mean Absolute Percentage Error (MAPE)**
-- **R² Score (Coefficient of Determination)**
-
-### **Outcome**
-A quantitative comparison of model performance, guiding the selection of the best forecasting method for production use.
 
