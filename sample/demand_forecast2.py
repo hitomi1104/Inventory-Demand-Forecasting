@@ -456,7 +456,7 @@ if selected_model:
     fig = plot_each_model_predictions(y_train, y_test, selected_model, dates_train, dates_test, selected_model_name)
 
     # Generate future forecast
-    st.subheader("🔮 Future Forecast for Next Month")
+    st.subheader("🔮 Future Forecast for Next Week")
     # future_fig, monthly_forecast = future_forecast(selected_model)
     future_fig, weekly_forecast = future_forecast(selected_model)
 
