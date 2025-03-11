@@ -36,6 +36,8 @@ from lightgbm import LGBMRegressor
 from catboost import CatBoostRegressor
 from sklearn.svm import SVR
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.ensemble import StackingRegressor
+from sklearn.ensemble import StackingRegressor, VotingRegressor
 
 
 
@@ -170,12 +172,55 @@ def plot_each_model_predictions(y_train, y_test, model, dates_train, dates_test,
     st.plotly_chart(fig)
 
 
+# Function to generate future forecasts
+def future_forecast(model):
+    future_steps = 7  # Define forecast period
+    dates_future = pd.date_range(start=dates_test.iloc[-1], periods=future_steps + 1, freq='D')[1:]
+
+    # Train model on full training data
+    model.fit(X_train, y_train)
+
+    # Prepare future input features
+    future_X = np.zeros((future_steps, X_train.shape[1]))
+    future_X[0, :] = X_test[-1, :]  # Start with last test sample
+
+    future_predictions = []
+    for i in range(future_steps):
+        next_pred = model.predict(future_X[i, :].reshape(1, -1))[0]
+        future_predictions.append(next_pred)
+
+        # Shift features forward
+        if i + 1 < future_steps:
+            future_X[i + 1, :-1] = future_X[i, 1:]
+            future_X[i + 1, -1] = next_pred
+
+    # Convert to NumPy array
+    y_pred_future = np.array(future_predictions)
+
+    # Aggregate predictions to monthly forecast
+    weekly_forecast = y_pred_future.sum()
+    # monthly_forecast = y_pred_future.sum()  # Sum daily predictions for a monthly forecast
+
+    # Create future forecast visualization
+    fig_future = go.Figure()
+    fig_future.add_trace(go.Scatter(x=dates_future, y=y_pred_future, mode='lines', name="Future Forecast",
+                                    line=dict(color="green", dash="dot")))
+    fig_future.update_layout(title="Future Sales Forecast", xaxis_title="Date", yaxis_title="Sales")
+
+    return fig_future, int(weekly_forecast)
+
 
 
 
 
 
 ######################################################################################################################################
+
+######################################################################################################################################
+
+######################################################################################################################################
+
+
 
 
 st.set_page_config(page_title="Sales Dashboard", layout="centered")
@@ -401,20 +446,44 @@ with tab2:
 dates_test = d_df_ml.iloc[train_size:]["Date"]
 dates_train = d_df_ml.iloc[:train_size]["Date"]
 
-# Plot only for training and test predictions (no future forecasting)
-plot_each_model_predictions(y_train, y_test, LinearRegression(), dates_train, dates_test, "Linear Regression")
-plot_each_model_predictions(y_train, y_test, Ridge(), dates_train, dates_test, "Ridge Regression")
-plot_each_model_predictions(y_train, y_test, Lasso(), dates_train, dates_test, "Lasso Regression")
-plot_each_model_predictions(y_train, y_test, ElasticNet(), dates_train, dates_test, "Elastic Net")
 
-plot_each_model_predictions(y_train, y_test, RandomForestRegressor(n_estimators=100), dates_train, dates_test, "Random Forest")
-plot_each_model_predictions(y_train, y_test, XGBRegressor(n_estimators=100), dates_train, dates_test, "XGBoost")
-plot_each_model_predictions(y_train, y_test, LGBMRegressor(n_estimators=100), dates_train, dates_test, "LightGBM")
-plot_each_model_predictions(y_train, y_test, CatBoostRegressor(n_estimators=100, verbose=0), dates_train, dates_test, "CatBoost")
+selected_model_name = st.selectbox("Choose a Model:", list(models.keys()))
+selected_model = models[selected_model_name]
 
-plot_each_model_predictions(y_train, y_test, SVR(kernel="rbf", C=1.0, epsilon=0.1), dates_train, dates_test, "Support Vector Regression")
+# Generate & display predictions only when a model is selected
+if selected_model:
+    st.subheader(f"📈 Predictions for {selected_model_name}")
+    fig = plot_each_model_predictions(y_train, y_test, selected_model, dates_train, dates_test, selected_model_name)
+
+    # Generate future forecast
+    st.subheader("🔮 Future Forecast for Next Month")
+    # future_fig, monthly_forecast = future_forecast(selected_model)
+    future_fig, weekly_forecast = future_forecast(selected_model)
+
+    # Display the future forecast visualization
+    st.plotly_chart(future_fig)
+
+    # Display forecasted order quantity
+    st.success(f"📊 Recommended Order Quantity for Next Week: **{weekly_forecast} units**")
+
+
+
+
 ######################################################################################################################################
-
+# # Emsemble Modeling
+#
+# base_models = [
+#     ("catboost", CatBoostRegressor(n_estimators=100, verbose=0)),  # Handles categorical features well
+#     ("lightgbm", LGBMRegressor(n_estimators=100)),  # Efficient boosting for large datasets
+#     ("xgboost", XGBRegressor(n_estimators=100)),  # Strong performance for structured data
+#     ("ridge", Ridge()),  # Adds linear generalization component
+#     ("svr", SVR(kernel="rbf"))  # Captures non-linearity
+# ]
+# stacking_model = StackingRegressor(estimators=base_models, final_estimator=Ridge())
+# blending_model = VotingRegressor(estimators=base_models)
+#
+# plot_each_model_predictions(y_train, y_test, stacking_model, dates_train, dates_test, "Stacking Regressor")
+# plot_each_model_predictions(y_train, y_test, blending_model, dates_train, dates_test, "Blending Regressor")
 ######################################################################################################################################
 
 
