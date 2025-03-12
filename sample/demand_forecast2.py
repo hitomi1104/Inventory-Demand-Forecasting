@@ -94,6 +94,8 @@ def sales_aggregation(data, time="monthly"):
     return data
 
 
+
+
 def evaluate_models(models, X_train, X_test, y_train, y_test):
     results = []
     overfitting_results = []
@@ -129,6 +131,102 @@ def evaluate_models(models, X_train, X_test, y_train, y_test):
     df_overfitting_results = pd.DataFrame(overfitting_results)
 
     return df_results, df_overfitting_results, predictions
+
+
+
+
+
+
+import plotly.graph_objects as go
+
+import plotly.graph_objects as go
+
+def plot_model_performance(df_overfitting_results, display_mode="plotly"):
+    """
+    Visualizes model performance by plotting R² scores and cost functions (MAE & RMSE) using Plotly.
+
+    Parameters:
+    df_overfitting_results (DataFrame): A DataFrame containing Train/Test R², MAE, and RMSE scores for different models.
+    display_mode (str): "plotly" to return figures for interactive plotting,
+                        "streamlit" to display directly in a Streamlit app.
+    """
+
+    # Define the correct order of models
+    model_order = [
+        "Linear Regression",
+        "Ridge Regression",
+        "Lasso Regression",
+        "Elastic Net",
+        "Random Forest",
+        "XGBoost",
+        "LightGBM",
+        "CatBoost",
+        "Support Vector Regression (SVR)"
+    ]
+
+    # Ensure DataFrame follows the defined order
+    df_overfitting_results = df_overfitting_results.set_index("Model").loc[model_order].reset_index()
+
+    models = df_overfitting_results["Model"]
+
+    # R² Scores Visualization (Horizontal Bars)
+    fig_r2 = go.Figure()
+    fig_r2.add_trace(go.Bar(
+        y=models[::-1],  # Reverse the model order to maintain correct top-to-bottom order
+        x=df_overfitting_results["Train R²"][::-1],
+        name="Train R²",
+        marker_color="green",
+        orientation="h"
+    ))
+    fig_r2.add_trace(go.Bar(
+        y=models[::-1],
+        x=df_overfitting_results["Test R²"][::-1],
+        name="Test R²",
+        marker_color="orange",
+        orientation="h"
+    ))
+    fig_r2.add_vline(x=0, line_color="black")  # Set 0 as a reference in the middle
+    fig_r2.update_layout(title="R² Score Comparison (Train vs Test)", barmode="group",
+                         yaxis_title="Models", xaxis_title="R² Score", legend_title="Dataset",
+                         yaxis=dict(categoryorder="array", categoryarray=model_order[::-1]))
+
+    # Cost Function Visualization (Horizontal Bars)
+    fig_cost = go.Figure()
+    fig_cost.add_trace(go.Bar(
+        y=models[::-1],
+        x=df_overfitting_results["Train RMSE"][::-1],
+        name="Train RMSE",
+        marker_color="green",
+        orientation="h"
+    ))
+    fig_cost.add_trace(go.Bar(
+        y=models[::-1],
+        x=df_overfitting_results["Test RMSE"][::-1],
+        name="Test RMSE",
+        marker_color="orange",
+        orientation="h"
+    ))
+    fig_cost.update_layout(title="RMSE Comparison",
+                           yaxis_title="Models", xaxis_title="Error",
+                           legend_title="Metric", barmode="group",
+                           yaxis=dict(categoryorder="array", categoryarray=model_order[::-1]))
+
+    # Display in Streamlit if selected
+    if display_mode == "streamlit":
+        st.plotly_chart(fig_r2, use_container_width=True)
+        st.plotly_chart(fig_cost, use_container_width=True)
+    else:
+        return fig_r2, fig_cost  # Return figures for normal Plotly display
+
+
+
+
+
+
+
+
+
+
 
 # Function to train, predict, and visualize using Plotly
 def plot_each_model_predictions(y_train, y_test, model, dates_train, dates_test, model_name):
@@ -205,7 +303,7 @@ def future_forecast(model):
     fig_future = go.Figure()
     fig_future.add_trace(go.Scatter(x=dates_future, y=y_pred_future, mode='lines', name="Future Forecast",
                                     line=dict(color="green", dash="dot")))
-    fig_future.update_layout(title="Future Sales Forecast", xaxis_title="Date", yaxis_title="Sales")
+    fig_future.update_layout(title="Future Sales Forecast", xaxis_title="Date", yaxis_title="ShippedQty")
 
     return fig_future, int(weekly_forecast)
 
@@ -223,7 +321,7 @@ def future_forecast(model):
 
 
 
-st.set_page_config(page_title="Sales Dashboard", layout="centered")
+st.set_page_config(page_title="UC3 Demand Forecasting", layout="centered")
 st.image("images/uc3.png")
 
 
@@ -247,7 +345,7 @@ d_df = sales_aggregation(df, "daily")
 st.write(d_df,  height=300)
 
 # Streamlit UI
-st.subheader("Distributions of ShippedQty")
+st.subheader("Time Series Aggregation Chart")
 col1, col2 = st.columns(2)
 col3, col4 = st.columns(2)
 # Yearly Sales
@@ -298,25 +396,25 @@ sns.despine()
 
 
 ######################################################################################################################################
-# skewness = d_df["ShippedQty"].skew()
-#
-# # Streamlit UI
-# st.subheader("Distribution of ShippedQty")
-# st.write(f"**Skewness of ShippedQty:** {skewness:.2f}")
-#
-# # Create figure for visualization
-# fig, axes = plt.subplots(1, 2, figsize=(8, 3))
-#
-# # Histogram with KDE
-# sns.histplot(d_df["ShippedQty"], bins=30, kde=True, ax=axes[0])
-# axes[0].set_title("PDF")
-#
-# # Boxplot
-# sns.boxplot(x=d_df["ShippedQty"], ax=axes[1])
-# axes[1].set_title("Boxplot")
-#
-# # Display in Streamlit
-# st.pyplot(fig)
+skewness = d_df["ShippedQty"].skew()
+
+# Streamlit UI
+st.subheader("Distribution of ShippedQty")
+st.write(f"**Skewness of ShippedQty:** {skewness:.2f}")
+
+# Create figure for visualization
+fig, axes = plt.subplots(1, 2, figsize=(8, 3))
+
+# Histogram with KDE
+sns.histplot(d_df["ShippedQty"], bins=30, kde=True, ax=axes[0])
+axes[0].set_title("PDF")
+
+# Boxplot
+sns.boxplot(x=d_df["ShippedQty"], ax=axes[1])
+axes[1].set_title("Boxplot")
+
+# Display in Streamlit
+st.pyplot(fig)
 
 ######################################################################################################################################
 
@@ -440,6 +538,8 @@ with tab1:
     st.dataframe(df_results)  # Displays the model performance table
 with tab2:
     st.dataframe(df_overfitting)  # Displays the overfitting check table
+    
+plot_model_performance(df_overfitting, display_mode="streamlit")
 ######################################################################################################################################
 # ML Plotting
 # Ensure dates are aligned with test set
@@ -447,7 +547,21 @@ dates_test = d_df_ml.iloc[train_size:]["Date"]
 dates_train = d_df_ml.iloc[:train_size]["Date"]
 
 
-selected_model_name = st.selectbox("Choose a Model:", list(models.keys()))
+
+
+# selected_model_name = st.selectbox("Choose a Model:", list(models.keys()))
+# selected_model = models[selected_model_name]
+
+
+default_model = "CatBoost" 
+if default_model not in models:
+    default_model = list(models.keys())[0]
+default_index = list(models.keys()).index(default_model)
+
+# Select box with default selection
+selected_model_name = st.selectbox("Choose a Model:", list(models.keys()), index=default_index)
+
+# Get the selected model
 selected_model = models[selected_model_name]
 
 # Generate & display predictions only when a model is selected
