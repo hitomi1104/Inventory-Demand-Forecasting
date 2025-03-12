@@ -130,7 +130,7 @@ def evaluate_models(models, X_train, X_test, y_train, y_test):
     df_results = pd.DataFrame(results)
     df_overfitting_results = pd.DataFrame(overfitting_results)
 
-    return df_results, df_overfitting_results, predictions
+    return round(df_results, 3), round(df_overfitting_results, 3), predictions
 
 
 
