@@ -325,7 +325,7 @@ st.set_page_config(page_title="UC3 Demand Forecasting", layout="centered")
 st.image("app/images/uc3.png")
 
 
-file_directory = 'data/SKUs'
+file_directory = 'app/data/SKUs'
 files = [f for f in os.listdir(file_directory) if f.endswith('.csv')]
 
 # Create a dropdown for file selection
