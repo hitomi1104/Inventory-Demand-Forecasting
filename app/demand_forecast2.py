@@ -322,7 +322,7 @@ def future_forecast(model):
 
 
 st.set_page_config(page_title="UC3 Demand Forecasting", layout="centered")
-st.image("images/uc3.png")
+st.image("app/images/uc3.png")
 
 
 file_directory = 'data/SKUs'
