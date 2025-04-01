@@ -1,5 +1,7 @@
 # 📈 Demand Forecasting Project
 
+Link to the APP: https://inv-demand-forecast.streamlit.app/
+
 ## 👉 Step 1: Aggregate the Data
 ### **Objective**
 Convert raw transactional data into structured time-series format to prepare for forecasting models.
